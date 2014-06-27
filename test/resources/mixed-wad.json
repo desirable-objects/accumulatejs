@@ -1,0 +1,21 @@
+{
+	"wads": {
+		"only-css": {
+			"files": [
+				{ "path": "/../test/resources/components/only-css/lorem.css" }
+			]
+		},
+		"only-js": {
+			"files": [
+				{ "path": "/../test/resources/components/example-two/baz.js" }
+			]
+		},
+		"mixed": {
+			"files": [
+				{ "path": "/../test/resources/components/example-one/foo.js" },
+				{ "path": "/../test/resources/components/example-one/bar.js" },
+				{ "path": "/../test/resources/components/only-css/lorem.css" }
+			]
+		}
+	}
+}

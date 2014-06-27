@@ -1,0 +1,15 @@
+{
+	"wads": {
+		"example-one": {
+			"files": [
+				{ "path": "/../test/resources/components/example-one/foo.js" },
+				{ "path": "/../test/resources/components/example-one/bar.js" }
+			]
+		},
+		"example-two": {
+			"files": [
+				{ "path": "/../test/resources/components/example-two/baz.js" }
+			]
+		}
+	}
+}

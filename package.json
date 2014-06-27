@@ -1,0 +1,30 @@
+{
+  "name": "accumulatejs",
+  "version": "0.0.0",
+  "description": "Asset accumulation for the frontend.",
+  "main": "module.js",
+  "repository": {
+    "url": "http://git.example.org"
+  },
+  "dependencies": {
+    "async": "^0.9.0",
+    "crypto": "0.0.3",
+    "grunt": "^0.4.5",
+    "grunt-mocha": "^0.4.11",
+    "lodash": "^2.4.1"
+  },
+  "devDependencies": {
+    "expect": "^0.1.1",
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.4.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-uglify": "^0.5.0",
+    "grunt-simple-mocha": "^0.4.0",
+    "should": "^4.0.4"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,15 @@
+{
+	"wads": {
+		"broken-bundle": {
+			"files": [
+				{ "path": "/../test/resources/components/example-one/foo.js" },
+				{ "path": "/../test/resources/components/example-one/fee.js" }
+			]
+		},
+		"working-bundle": {
+			"files": [
+				{ "path": "/../test/resources/components/example-two/baz.js" }
+			]
+		}
+	}
+}
