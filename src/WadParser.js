@@ -49,16 +49,19 @@ module.exports = function(config) {
 
 	function accumulate(key, descriptor) {
 
-		var buffer = '',
+		var buffers = {},
 			originalFilename,
 			broken = false;
 
 		_(descriptor.files).forEach(function(asset) {
 
+			var fileExtension = determineExtension(asset.path);
+			buffers[fileExtension] = buffers[fileExtension] || '';
+
 			var path = __dirname+asset.path;
 			try {
 				var contents = fs.readFileSync(path);
-				buffer += contents;
+				buffers[fileExtension] += contents;
 			} catch (e) {
 				console.log('Could not load asset at', path, 'for bundle', key);
 				broken = true;
@@ -67,13 +70,16 @@ module.exports = function(config) {
 		});
 
 		if (broken) {
+			console.log('Bundle', key, 'was omitted due to previous errors.');
 			return undefined;
 		}
 
-		var fileExtension = determineExtension('anyfile.js');
-		var hashFileName = makeHash(fileExtension, buffer);
 		var mapping = { id: key };
-		mapping[fileExtension] = hashFileName;
+		_.forEach(buffers, function(buffer, extension) {
+			var hashFileName = makeHash(extension, buffer);
+			mapping[extension] = hashFileName;
+		});
+
 		return mapping;
 
 	}

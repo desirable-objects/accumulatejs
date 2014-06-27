@@ -70,7 +70,7 @@ describe('Wad Parser', function(done) {
 		// and:
 		var expectedBundles = {
 			'only-js': { id: 'only-js', js: 'e1f7f1b3b45af51e2740de062f586832.js' },
-			'only-css': { id: 'only-css', js: '9b89bacc43a9a9e55575868f17690f73.css' },
+			'only-css': { id: 'only-css', css: '9b89bacc43a9a9e55575868f17690f73.css' },
 			'mixed': { id: 'mixed', js: '28768b618853836ea622520852a2a939.js', css: '9b89bacc43a9a9e55575868f17690f73.css' }
 		};
 
