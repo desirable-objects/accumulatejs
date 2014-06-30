@@ -41,22 +41,23 @@ module.exports = function(config) {
 
 		var buffers = {};
 
-		async.eachSeries(descriptor.files, function(asset, next) {
+        function appendFileContent(asset, next) {
 
-			var fileExtension = determineExtension(asset.path);
-			buffers[fileExtension] = buffers[fileExtension] || '';
+            var fileExtension = determineExtension(asset.path);
+            buffers[fileExtension] = buffers[fileExtension] || '';
 
-			var path = __dirname+asset.path;
-			try {
-				var contents = fs.readFileSync(path);
-				buffers[fileExtension] += contents;
+            var path = __dirname+asset.path;
+            try {
+                buffers[fileExtension] += fs.readFileSync(path);
                 return next();
-			} catch (e) {
-				console.log('Could not load asset at', path, 'for bundle');
+            } catch (e) {
+                console.log('Could not load asset at', path, 'for bundle');
                 return next(e);
-			}
+            }
 
-		}, function(err) {
+        }
+
+        function finallyCreateBundle(err) {
 
             if (err) {
                 return callback(err);
@@ -64,12 +65,13 @@ module.exports = function(config) {
 
             var mapping = {};
             _.forEach(buffers, function(buffer, extension) {
-                var hashFileName = makeHash(extension, buffer);
-                mapping[extension] = hashFileName;
+                mapping[extension] = makeHash(extension, buffer);
             });
 
             return callback(null, mapping);
-        });
+        }
+
+		async.eachSeries(descriptor.files, appendFileContent, finallyCreateBundle);
 	}
 
 	function determineExtension(originalFilename) {
