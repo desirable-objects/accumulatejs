@@ -29,8 +29,8 @@ describe('Wad Parser', function(done) {
 
 		// and:
 		var expectedBundles = {
-			'example-one': { id: 'example-one', js: '28768b618853836ea622520852a2a939.js' },
-			'example-two': { id: 'example-two', js: 'e1f7f1b3b45af51e2740de062f586832.js' }
+			'example-one': { id: 'example-one', js: '/28768b618853836ea622520852a2a939.js' },
+			'example-two': { id: 'example-two', js: '/e1f7f1b3b45af51e2740de062f586832.js' }
 		};
 
 		// when:
@@ -42,7 +42,7 @@ describe('Wad Parser', function(done) {
 			done();
 		};
 
-	})
+	});
 
 	it('Should not bundle if a file cannot be found', function(done) {
 
@@ -51,7 +51,7 @@ describe('Wad Parser', function(done) {
 
 		// and:
 		var expectedBundles = {
-			'working-bundle': { id: 'working-bundle', js: 'e1f7f1b3b45af51e2740de062f586832.js' }
+			'working-bundle': { id: 'working-bundle', js: '/e1f7f1b3b45af51e2740de062f586832.js' }
 		};
 
 		// and:
@@ -69,9 +69,9 @@ describe('Wad Parser', function(done) {
 
 		// and:
 		var expectedBundles = {
-			'only-js': { id: 'only-js', js: 'e1f7f1b3b45af51e2740de062f586832.js' },
-			'only-css': { id: 'only-css', css: '9b89bacc43a9a9e55575868f17690f73.css' },
-			'mixed': { id: 'mixed', js: '28768b618853836ea622520852a2a939.js', css: '9b89bacc43a9a9e55575868f17690f73.css' }
+			'only-js': { id: 'only-js', js: '/e1f7f1b3b45af51e2740de062f586832.js' },
+			'only-css': { id: 'only-css', css: '/9b89bacc43a9a9e55575868f17690f73.css' },
+			'mixed': { id: 'mixed', js: '/28768b618853836ea622520852a2a939.js', css: '/9b89bacc43a9a9e55575868f17690f73.css' }
 		};
 
 		// when:
@@ -82,6 +82,29 @@ describe('Wad Parser', function(done) {
 			bundles.should.eql(expectedBundles);
 			done();
 		};		
+
+	});
+
+	it('Should render using the correct baseUrl', function(done) {
+
+		// given:
+		wadParser = new WadParser({wadFile: 'test/resources/wad-with-baseurl.json'});
+
+		// and:
+		var expectedBundles = {
+			'only-css': { id: 'only-css', css: '/static/9b89bacc43a9a9e55575868f17690f73.css' },
+			'mixed': { id: 'mixed', js: '/static/28768b618853836ea622520852a2a939.js', css: '/static/9b89bacc43a9a9e55575868f17690f73.css' }
+		};
+
+		// when:
+		wadParser.load(loaded);
+
+		// then:
+		function loaded(bundles) {
+			bundles.should.eql(expectedBundles);
+			done();
+		};		
+
 
 	});
 

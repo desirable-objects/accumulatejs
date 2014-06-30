@@ -6,12 +6,14 @@ var async = require('async');
 module.exports = function(config) {
 
 	var _callback;
+	var deliveryUrl;
 
 	function _load(callback) {
 
 		_callback = callback;
 		var wadFile = config.wadFile || __dirname+'/wad.json';
-		fs.readFile(wadFile, 'utf8', gatherDescriptors);	
+
+		fs.readFile(wadFile, 'utf8', gatherDescriptors);
 
 	}
 
@@ -21,19 +23,18 @@ module.exports = function(config) {
 			
 		var conf = JSON.parse(wad);
 		var descriptors = conf.wads;
+		deliveryUrl = conf.deliveryUrl || '';
 
-		var bundlers = [];
+		var bundlingFunctions = [];
 		_(descriptors).forEach(function(descriptor, key) {
 
-			var _descriptor = descriptor;
-
-			bundlers.push(function(cb) {
-				cb(null, accumulate(key, _descriptor));
+			bundlingFunctions.push(function(cb) {
+				cb(null, accumulate(key, descriptor));
 			});
 
 		});
 
-		async.parallel(bundlers, function(err, bundled) {
+		function bundleCompletion(err, bundled) {
 
 			var _bundles = {};
 			var available = _.compact(bundled);
@@ -43,7 +44,9 @@ module.exports = function(config) {
 			});
 
 			_callback(_bundles);
-		});
+		}
+
+		async.parallel(bundlingFunctions, bundleCompletion);
 
 	}
 
@@ -91,7 +94,7 @@ module.exports = function(config) {
 	function makeHash(fileExtension, buffer) {
 
 		var hash = crypto.createHash('md5').update(buffer).digest('hex');
-		return hash+'.'+fileExtension;
+		return deliveryUrl+'/'+hash+'.'+fileExtension;
 
 	}
 

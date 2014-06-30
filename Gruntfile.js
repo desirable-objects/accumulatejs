@@ -8,7 +8,7 @@ module.exports = function(grunt) {
         jshint: {
             files: ['Gruntfile.js', 'src/*.js'],
             options: {
-                maxlen: 80,
+                maxlen: 140,
                 quotmark: 'single'
             }
         },
@@ -41,7 +41,7 @@ module.exports = function(grunt) {
                 timeout: 3000,
                 ignoreLeaks: false,
                 ui: 'bdd',
-                reporter: 'tap'
+                reporter: 'spec'
             },
             all: { src: ['test/**/*.test.js'] }
         }

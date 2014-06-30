@@ -1,0 +1,17 @@
+{
+	"deliveryUrl": "/static",
+	"wads": {
+		"only-css": {
+			"files": [
+				{ "path": "/../test/resources/components/only-css/lorem.css" }
+			]
+		},
+		"mixed": {
+			"files": [
+				{ "path": "/../test/resources/components/example-one/foo.js" },
+				{ "path": "/../test/resources/components/example-one/bar.js" },
+				{ "path": "/../test/resources/components/only-css/lorem.css" }
+			]
+		}
+	}
+}
