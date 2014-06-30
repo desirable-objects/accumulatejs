@@ -5,7 +5,7 @@ describe('Wad Parser', function(done) {
 
 	var config = {
 		wadFile: 'test/resources/custom-wad.json'
-	}
+	};
 
 	var wadParser;
 
@@ -20,7 +20,7 @@ describe('Wad Parser', function(done) {
 			done();
 		});
 
-	})
+	});
 
 	it('Should load wads from wadfile', function(done) {
 
@@ -29,8 +29,8 @@ describe('Wad Parser', function(done) {
 
 		// and:
 		var expectedBundles = {
-			'example-one': { id: 'example-one', js: '/28768b618853836ea622520852a2a939.js' },
-			'example-two': { id: 'example-two', js: '/e1f7f1b3b45af51e2740de062f586832.js' }
+			'example-one': { js: '/28768b618853836ea622520852a2a939.js' },
+			'example-two': { js: '/e1f7f1b3b45af51e2740de062f586832.js' }
 		};
 
 		// when:
@@ -40,7 +40,7 @@ describe('Wad Parser', function(done) {
 		function loaded(bundles) {
 			bundles.should.eql(expectedBundles);
 			done();
-		};
+		}
 
 	});
 
@@ -51,7 +51,7 @@ describe('Wad Parser', function(done) {
 
 		// and:
 		var expectedBundles = {
-			'working-bundle': { id: 'working-bundle', js: '/e1f7f1b3b45af51e2740de062f586832.js' }
+			'working-bundle': { js: '/e1f7f1b3b45af51e2740de062f586832.js' }
 		};
 
 		// and:
@@ -69,9 +69,9 @@ describe('Wad Parser', function(done) {
 
 		// and:
 		var expectedBundles = {
-			'only-js': { id: 'only-js', js: '/e1f7f1b3b45af51e2740de062f586832.js' },
-			'only-css': { id: 'only-css', css: '/9b89bacc43a9a9e55575868f17690f73.css' },
-			'mixed': { id: 'mixed', js: '/28768b618853836ea622520852a2a939.js', css: '/9b89bacc43a9a9e55575868f17690f73.css' }
+			'only-js': { js: '/e1f7f1b3b45af51e2740de062f586832.js' },
+			'only-css': { css: '/9b89bacc43a9a9e55575868f17690f73.css' },
+			'mixed': { js: '/28768b618853836ea622520852a2a939.js', css: '/9b89bacc43a9a9e55575868f17690f73.css' }
 		};
 
 		// when:
@@ -81,7 +81,7 @@ describe('Wad Parser', function(done) {
 		function loaded(bundles) {
 			bundles.should.eql(expectedBundles);
 			done();
-		};		
+		}
 
 	});
 
@@ -92,8 +92,8 @@ describe('Wad Parser', function(done) {
 
 		// and:
 		var expectedBundles = {
-			'only-css': { id: 'only-css', css: '/static/9b89bacc43a9a9e55575868f17690f73.css' },
-			'mixed': { id: 'mixed', js: '/static/28768b618853836ea622520852a2a939.js', css: '/static/9b89bacc43a9a9e55575868f17690f73.css' }
+			'only-css': { css: '/static/9b89bacc43a9a9e55575868f17690f73.css' },
+			'mixed': { js: '/static/28768b618853836ea622520852a2a939.js', css: '/static/9b89bacc43a9a9e55575868f17690f73.css' }
 		};
 
 		// when:
@@ -103,8 +103,7 @@ describe('Wad Parser', function(done) {
 		function loaded(bundles) {
 			bundles.should.eql(expectedBundles);
 			done();
-		};		
-
+		}
 
 	});
 
