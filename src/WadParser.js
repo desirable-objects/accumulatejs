@@ -25,38 +25,23 @@ module.exports = function(config) {
 		var descriptors = conf.wads;
 		deliveryUrl = conf.deliveryUrl || '';
 
-		var bundlingFunctions = [];
+        var _bundles = {};
 		_(descriptors).forEach(function(descriptor, key) {
+                accumulate(descriptor, function(err, bundle) {
+                    if (!err) {
+                        _bundles[key] = bundle;
+                    }
+                });
+            });
 
-			bundlingFunctions.push(function(cb) {
-				cb(null, accumulate(key, descriptor));
-			});
-
-		});
-
-		function bundleCompletion(err, bundled) {
-
-			var _bundles = {};
-			var available = _.compact(bundled);
-
-			_(available).forEach(function(bundle) {
-				_bundles[bundle.id] = bundle;
-			});
-
-			_callback(_bundles);
-		}
-
-		async.parallel(bundlingFunctions, bundleCompletion);
-
+         return _callback(_bundles);
 	}
 
-	function accumulate(key, descriptor) {
+	function accumulate(descriptor, callback) {
 
-		var buffers = {},
-			originalFilename,
-			broken = false;
+		var buffers = {};
 
-		_(descriptor.files).forEach(function(asset) {
+		async.eachSeries(descriptor.files, function(asset, next) {
 
 			var fileExtension = determineExtension(asset.path);
 			buffers[fileExtension] = buffers[fileExtension] || '';
@@ -65,26 +50,26 @@ module.exports = function(config) {
 			try {
 				var contents = fs.readFileSync(path);
 				buffers[fileExtension] += contents;
+                return next();
 			} catch (e) {
-				console.log('Could not load asset at', path, 'for bundle', key);
-				broken = true;
-				return;
+				console.log('Could not load asset at', path, 'for bundle');
+                return next(e);
 			}
-		});
 
-		if (broken) {
-			console.log('Bundle', key, 'was omitted due to previous errors.');
-			return undefined;
-		}
+		}, function(err) {
 
-		var mapping = { id: key };
-		_.forEach(buffers, function(buffer, extension) {
-			var hashFileName = makeHash(extension, buffer);
-			mapping[extension] = hashFileName;
-		});
+            if (err) {
+                return callback(err);
+            }
 
-		return mapping;
+            var mapping = {};
+            _.forEach(buffers, function(buffer, extension) {
+                var hashFileName = makeHash(extension, buffer);
+                mapping[extension] = hashFileName;
+            });
 
+            return callback(null, mapping);
+        });
 	}
 
 	function determineExtension(originalFilename) {
@@ -99,7 +84,7 @@ module.exports = function(config) {
 	}
 
 	return {
-		load: _load,
+		load: _load
 	};
 
 };
