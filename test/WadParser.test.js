@@ -15,7 +15,8 @@ describe('Wad Parser', function(done) {
 		wadParser = new WadParser({});
 
 		// expect:
-		wadParser.load(function(bundles) {
+		wadParser.load(function(err, bundles) {
+            should.not.exist(err);
 			bundles.should.eql({});
 			done();
 		});
@@ -37,7 +38,8 @@ describe('Wad Parser', function(done) {
 		wadParser.load(loaded);
 
 		// then:
-		function loaded(bundles) {
+		function loaded(err, bundles) {
+            should.not.exist(err);
 			bundles.should.eql(expectedBundles);
 			done();
 		}
@@ -55,7 +57,8 @@ describe('Wad Parser', function(done) {
 		};
 
 		// and:
-		wadParser.load(function(bundles) {
+		wadParser.load(function(err, bundles) {
+            should.not.exist(err);
 			bundles.should.eql(expectedBundles);
 			done();
 		});
@@ -78,7 +81,8 @@ describe('Wad Parser', function(done) {
 		wadParser.load(loaded);
 
 		// then:
-		function loaded(bundles) {
+		function loaded(err, bundles) {
+            should.not.exist(err);
 			bundles.should.eql(expectedBundles);
 			done();
 		}
@@ -100,7 +104,8 @@ describe('Wad Parser', function(done) {
 		wadParser.load(loaded);
 
 		// then:
-		function loaded(bundles) {
+		function loaded(err, bundles) {
+            should.not.exist(err);
 			bundles.should.eql(expectedBundles);
 			done();
 		}

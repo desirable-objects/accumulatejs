@@ -19,7 +19,7 @@ module.exports = function(config) {
 
 	function gatherDescriptors(err, wad) {
 
-		if (err) { throw err; }
+		if (err) { return _callback(err); }
 			
 		var conf = JSON.parse(wad);
 		var descriptors = conf.wads;
@@ -34,7 +34,7 @@ module.exports = function(config) {
                 });
             });
 
-         return _callback(_bundles);
+         return _callback(null, _bundles);
 	}
 
 	function accumulate(descriptor, callback) {
