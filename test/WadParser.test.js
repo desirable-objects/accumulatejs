@@ -1,33 +1,13 @@
 var should = require('should');
 var fs = require('fs');
-var WadParser = require('../src/WadParser.js');
+var wadParser = require('../src/wadParser.js');
 
 describe('Wad Parser', function() {
 
-	var config = {
-		wadFile: 'test/resources/custom-wad.json'
-	};
-
-	var wadParser;
-
-	it('Should use a default wadfile if one is not specified in config', function(done) {
+	it('Should load wads from config', function(done) {
 
 		// given:
-		wadParser = new WadParser({});
-
-		// expect:
-		wadParser.load(function(err, bundles) {
-            should.not.exist(err);
-			bundles.should.eql({});
-			done();
-		});
-
-	});
-
-	it('Should load wads from wadfile', function(done) {
-
-		// given:
-		wadParser = new WadParser(config);
+        var config = require('./resources/custom-wad.json');
 
 		// and:
 		var expectedBundles = {
@@ -36,11 +16,12 @@ describe('Wad Parser', function() {
 		};
 
 		// when:
-		wadParser.load(loaded);
+        wadParser.load(config, loaded);
 
 		// then:
 		function loaded(err, bundles) {
             should.not.exist(err);
+            should.exist(bundles);
 			bundles.should.eql(expectedBundles);
 			done();
 		}
@@ -50,7 +31,7 @@ describe('Wad Parser', function() {
 	it('Should not bundle if a file cannot be found', function(done) {
 
 		// given:
-		wadParser = new WadParser({wadFile: 'test/resources/broken-wad.json'});
+        var config = require('./resources/broken-wad.json');
 
 		// and:
 		var expectedBundles = {
@@ -58,8 +39,8 @@ describe('Wad Parser', function() {
 		};
 
 		// and:
-		wadParser.load(function(err, bundles) {
-            should.not.exist(err);
+		wadParser.load(config, function(err, bundles) {
+            should.exist(err);
 			bundles.should.eql(expectedBundles);
 			done();
 		});
@@ -69,7 +50,7 @@ describe('Wad Parser', function() {
 	it('Should handle css and javascript', function(done) {
 
 		// given:
-		wadParser = new WadParser({wadFile: 'test/resources/mixed-wad.json'});
+        var config = require('./resources/mixed-wad.json');
 
 		// and:
 		var expectedBundles = {
@@ -79,7 +60,7 @@ describe('Wad Parser', function() {
 		};
 
 		// when:
-		wadParser.load(loaded);
+        wadParser.load(config, loaded);
 
 		// then:
 		function loaded(err, bundles) {
@@ -93,7 +74,7 @@ describe('Wad Parser', function() {
 	it('Should render using the correct baseUrl', function(done) {
 
 		// given:
-		wadParser = new WadParser({wadFile: 'test/resources/wad-with-baseurl.json'});
+        var config = require('./resources/wad-with-baseurl.json');
 
 		// and:
 		var expectedBundles = {
@@ -102,7 +83,7 @@ describe('Wad Parser', function() {
 		};
 
 		// when:
-		wadParser.load(loaded);
+        wadParser.load(config, loaded);
 
 		// then:
 		function loaded(err, bundles) {
@@ -116,10 +97,10 @@ describe('Wad Parser', function() {
     it('Should write cached files to specified location', function(done) {
 
         // given:
-        wadParser = new WadParser({wadFile: 'test/resources/wad-with-baseurl.json'});
+        var config = require('./resources/wad-with-baseurl.json');
 
         // when:
-        wadParser.load(loaded);
+        wadParser.load(config, loaded);
 
         // then:
         function loaded(err) {
