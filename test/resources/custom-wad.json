@@ -1,4 +1,5 @@
 {
+    "targetDir": "./test/static",
 	"wads": {
 		"example-one": {
 			"files": [

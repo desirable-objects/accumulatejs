@@ -113,4 +113,23 @@ describe('Wad Parser', function() {
 
 	});
 
+    it('Should write cached files to specified location', function(done) {
+
+        // given:
+        wadParser = new WadParser({wadFile: 'test/resources/wad-with-baseurl.json'});
+
+        // when:
+        wadParser.load(loaded);
+
+        // then:
+        function loaded(err) {
+            should.not.exist(err);
+            fs.existsSync(__dirname + '/static/9b89bacc43a9a9e55575868f17690f73.css').should.be.true;
+            fs.existsSync(__dirname + '/static/fbb326a67febbe936181f9e9e5455f33.js').should.be.true;
+            fs.existsSync(__dirname + '/static/9b89bacc43a9a9e55575868f17690f73.css').should.be.true;
+            done();
+        }
+
+    });
+
 });

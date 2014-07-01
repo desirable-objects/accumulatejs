@@ -3,10 +3,12 @@ var crypto = require('crypto');
 var fs = require('fs');
 var async = require('async');
 var compressor = require('./ResourceCompressor.js');
+var pathModule = require('path');
 
 module.exports = function(config) {
 
 	var deliveryUrl;
+    var targetDir;
 
 	function _load(callback) {
 
@@ -25,15 +27,16 @@ module.exports = function(config) {
 		var conf = JSON.parse(wad);
 		var descriptors = conf.wads;
 		deliveryUrl = conf.deliveryUrl || '';
+        targetDir = conf.targetDir;
 
         var _bundles = {};
 		_(descriptors).forEach(function(descriptor, key) {
-                accumulate(descriptor, key, function(err, bundle) {
-                    if (!err) {
-                        _bundles[key] = bundle;
-                    }
-                });
+            accumulate(descriptor, key, function(err, bundle) {
+                if (!err) {
+                    _bundles[key] = bundle;
+                }
             });
+        });
 
          return callback(null, _bundles);
 	}
@@ -47,7 +50,7 @@ module.exports = function(config) {
             var fileExtension = determineExtension(asset.path);
             buffers[fileExtension] = buffers[fileExtension] || '';
 
-            var path = __dirname+asset.path;
+            var path = pathModule.join(__dirname, asset.path);
             try {
                 buffers[fileExtension] += fs.readFileSync(path);
                 return next();
@@ -67,7 +70,9 @@ module.exports = function(config) {
             _.forEach(buffers, function(buffer, extension) {
                 var compressed = compressor.compress(buffer, extension);
                 var file = makeHash(extension, compressed);
-                mapping[extension] = file;
+                var path = pathModule.join(targetDir, file);
+                fs.writeFileSync(path, compressed);
+                mapping[extension] = deliveryUrl + '/' + file;
             });
 
             return callback(null, mapping);
@@ -83,7 +88,7 @@ module.exports = function(config) {
 	function makeHash(fileExtension, buffer) {
 
 		var hash = crypto.createHash('md5').update(buffer).digest('hex');
-		return deliveryUrl+'/'+hash+'.'+fileExtension;
+		return hash+'.'+fileExtension;
 
 	}
 
