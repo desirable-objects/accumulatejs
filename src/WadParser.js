@@ -2,24 +2,25 @@ var _ = require('lodash');
 var crypto = require('crypto');
 var fs = require('fs');
 var async = require('async');
+var compressor = require('./ResourceCompressor.js');
 
 module.exports = function(config) {
 
-	var _callback;
 	var deliveryUrl;
 
 	function _load(callback) {
 
-		_callback = callback;
 		var wadFile = config.wadFile || __dirname+'/wad.json';
 
-		fs.readFile(wadFile, 'utf8', gatherDescriptors);
+		fs.readFile(wadFile, 'utf8', function(err, content){
+            gatherDescriptors(err, content, callback);
+        });
 
 	}
 
-	function gatherDescriptors(err, wad) {
+	function gatherDescriptors(err, wad, callback) {
 
-		if (err) { return _callback(err); }
+		if (err) { return callback(err); }
 			
 		var conf = JSON.parse(wad);
 		var descriptors = conf.wads;
@@ -27,17 +28,17 @@ module.exports = function(config) {
 
         var _bundles = {};
 		_(descriptors).forEach(function(descriptor, key) {
-                accumulate(descriptor, function(err, bundle) {
+                accumulate(descriptor, key, function(err, bundle) {
                     if (!err) {
                         _bundles[key] = bundle;
                     }
                 });
             });
 
-         return _callback(null, _bundles);
+         return callback(null, _bundles);
 	}
 
-	function accumulate(descriptor, callback) {
+	function accumulate(descriptor, key, callback) {
 
 		var buffers = {};
 
@@ -51,10 +52,9 @@ module.exports = function(config) {
                 buffers[fileExtension] += fs.readFileSync(path);
                 return next();
             } catch (e) {
-                console.log('Could not load asset at', path, 'for bundle');
+                console.log('Could not load asset at', path, 'for bundle', key);
                 return next(e);
             }
-
         }
 
         function finallyCreateBundle(err) {
@@ -65,7 +65,9 @@ module.exports = function(config) {
 
             var mapping = {};
             _.forEach(buffers, function(buffer, extension) {
-                mapping[extension] = makeHash(extension, buffer);
+                var compressed = compressor.compress(buffer, extension);
+                var file = makeHash(extension, compressed);
+                mapping[extension] = file;
             });
 
             return callback(null, mapping);

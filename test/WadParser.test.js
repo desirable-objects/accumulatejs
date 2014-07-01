@@ -1,7 +1,8 @@
 var should = require('should');
+var fs = require('fs');
 var WadParser = require('../src/WadParser.js');
 
-describe('Wad Parser', function(done) {
+describe('Wad Parser', function() {
 
 	var config = {
 		wadFile: 'test/resources/custom-wad.json'
@@ -30,8 +31,8 @@ describe('Wad Parser', function(done) {
 
 		// and:
 		var expectedBundles = {
-			'example-one': { js: '/28768b618853836ea622520852a2a939.js' },
-			'example-two': { js: '/e1f7f1b3b45af51e2740de062f586832.js' }
+			'example-one': { js: '/fbb326a67febbe936181f9e9e5455f33.js' },
+			'example-two': { js: '/ba164a35157efb67673a784c61bfd100.js' }
 		};
 
 		// when:
@@ -53,7 +54,7 @@ describe('Wad Parser', function(done) {
 
 		// and:
 		var expectedBundles = {
-			'working-bundle': { js: '/e1f7f1b3b45af51e2740de062f586832.js' }
+			'working-bundle': { js: '/ba164a35157efb67673a784c61bfd100.js' }
 		};
 
 		// and:
@@ -72,9 +73,9 @@ describe('Wad Parser', function(done) {
 
 		// and:
 		var expectedBundles = {
-			'only-js': { js: '/e1f7f1b3b45af51e2740de062f586832.js' },
+			'only-js': { js: '/ba164a35157efb67673a784c61bfd100.js' },
 			'only-css': { css: '/9b89bacc43a9a9e55575868f17690f73.css' },
-			'mixed': { js: '/28768b618853836ea622520852a2a939.js', css: '/9b89bacc43a9a9e55575868f17690f73.css' }
+			'mixed': { js: '/fbb326a67febbe936181f9e9e5455f33.js', css: '/9b89bacc43a9a9e55575868f17690f73.css' }
 		};
 
 		// when:
@@ -97,7 +98,7 @@ describe('Wad Parser', function(done) {
 		// and:
 		var expectedBundles = {
 			'only-css': { css: '/static/9b89bacc43a9a9e55575868f17690f73.css' },
-			'mixed': { js: '/static/28768b618853836ea622520852a2a939.js', css: '/static/9b89bacc43a9a9e55575868f17690f73.css' }
+			'mixed': { js: '/static/fbb326a67febbe936181f9e9e5455f33.js', css: '/static/9b89bacc43a9a9e55575868f17690f73.css' }
 		};
 
 		// when:

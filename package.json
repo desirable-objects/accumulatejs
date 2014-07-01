@@ -12,7 +12,8 @@
     "grunt": "^0.4.5",
     "grunt-mocha": "^0.4.11",
     "lodash": "^2.4.1",
-    "handlebars": "~2.0.0-alpha.4"
+    "handlebars": "~2.0.0-alpha.4",
+    "uglify-js": "~2.4.14"
   },
   "devDependencies": {
     "expect": "^0.1.1",
